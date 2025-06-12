@@ -11,9 +11,9 @@ import java.util.HashMap;
 public class Datenbank {
 
     //Listen in denen die ausgelesenen Objekte gespeichert werden
-    public ArrayList<Fahrer> fahrerListe = new ArrayList<>();
-    public ArrayList<Dienstwagen> fahrzeugListe = new ArrayList<>();
-    public ArrayList<Fahrt> fahrtenBuch = new ArrayList<>();
+    private ArrayList<Fahrer> fahrerListe = new ArrayList<>();
+    private ArrayList<Dienstwagen> fahrzeugListe = new ArrayList<>();
+    private ArrayList<Fahrt> fahrtenBuch = new ArrayList<>();
 
     private String path;
 
@@ -71,20 +71,42 @@ public class Datenbank {
                 //Switch case um die verschiedenen Listen zu füllen und unnötige Zeichen zu entfernen
                 switch (entity_type) {
                     case "Fahrer":
-                        fahrerListe.add(new Fahrer(
-                                teilString[0].trim(),
-                                teilString[1].trim(),
-                                teilString[2].trim(),
-                                teilString[3].trim()
-                        ));
+                        boolean fahrerExistiert = false;
+                        String fahrerID = teilString[0].trim();
+                        for(int i = 0; i < fahrerListe.size(); i++) {
+                            if(fahrerListe.get(i).getId().equals(fahrerID)) {
+                                fahrerExistiert = true;
+                                break;
+                            }
+                        }
+                        if(!fahrerExistiert) {
+                            fahrerListe.add(new Fahrer(
+                                    teilString[0].trim(),
+                                    teilString[1].trim(),
+                                    teilString[2].trim(),
+                                    teilString[3].trim()
+                            ));
+                        }
                         break;
                     case "Fahrzeug":
-                        fahrzeugListe.add(new Dienstwagen(
-                                teilString[0].trim(),
-                                teilString[1].trim(),
-                                teilString[2].trim(),
-                                teilString[3].trim()
-                        ));
+                        boolean fahrzeugExistiert = false;
+                        String fahrzeugID = teilString[0].trim();
+                        String kennzeichen = teilString[3].trim();
+                        for (int i = 0; i < fahrzeugListe.size(); i++) {
+                            if(fahrzeugListe.get(i).getId().equals(fahrzeugID) ||
+                            fahrzeugListe.get(i).getKennzeichen().equalsIgnoreCase(kennzeichen)) {
+                                fahrzeugExistiert = true;
+                                break;
+                            }
+                        }
+                        if(!fahrzeugExistiert) {
+                            fahrzeugListe.add(new Dienstwagen(
+                                    teilString[0].trim(),
+                                    teilString[1].trim(),
+                                    teilString[2].trim(),
+                                    teilString[3].trim()
+                            ));
+                        }
                         break;
                     case "Fahrt":
                         fahrtenBuch.add(new Fahrt(
